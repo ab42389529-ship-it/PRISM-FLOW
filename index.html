@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f6ff">
+<title>PRISM FLOW — Video Downloader</title>\n<meta name="description" content="PRISM FLOW video downloader interface">
+<style>
+:root{color-scheme:light;--bg:#f5f6ff;--surface:rgba(255,255,255,.76);--surface2:rgba(255,255,255,.92);--text:#182039;--muted:#75809b;--line:rgba(90,102,150,.15);--a:#596dff;--b:#d34dff;--c:#23cfc5;--glow:rgba(89,109,255,.2);--shadow:0 18px 48px rgba(61,72,135,.13)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;overflow-x:hidden;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:var(--bg);transition:background .45s,color .35s}
+body:before,body:after{content:"";position:fixed;z-index:-1;pointer-events:none;width:75vw;height:75vw;max-width:580px;max-height:580px;border-radius:50%;filter:blur(70px);opacity:.42;animation:float 13s ease-in-out infinite alternate}
+body:before{top:-30vw;left:-24vw;background:radial-gradient(circle,var(--a),transparent 68%)}body:after{right:-30vw;top:20vh;background:radial-gradient(circle,var(--b),transparent 68%);animation-delay:-5s}
+@keyframes float{from{transform:translate3d(0,0,0) scale(.92)}to{transform:translate3d(6vw,5vh,0) scale(1.12)}}
+button,input{font:inherit}button{cursor:pointer;touch-action:manipulation;transition:transform .18s,filter .18s,background .3s}button:active{transform:scale(.97)}button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var(--a) 45%,transparent);outline-offset:3px}
+.app{width:min(100%,560px);margin:auto;padding:env(safe-area-inset-top) 18px calc(100px + env(safe-area-inset-bottom))}
+.top{display:flex;align-items:center;justify-content:space-between;padding:20px 1px 22px;position:relative}
+.brand{display:flex;align-items:center;gap:11px}.logo{width:46px;height:46px;border-radius:16px;background:linear-gradient(135deg,var(--a),var(--b) 56%,var(--c));display:grid;place-items:center;color:white;font-size:22px;box-shadow:0 9px 25px var(--glow);position:relative;isolation:isolate}.logo:after{content:"";position:absolute;inset:1px;border-radius:15px;border:1px solid #ffffff99}
+.brand strong{display:block;font-size:19px;letter-spacing:-.7px}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:1.65px;text-transform:uppercase;margin-top:3px}
+.iconbtn{width:44px;height:44px;border:1px solid var(--line);border-radius:16px;background:var(--surface);backdrop-filter:blur(16px);color:var(--text);font-size:20px;box-shadow:0 6px 18px #28345c0b}
+.themebox{display:none;position:absolute;right:0;top:73px;gap:10px;padding:12px;background:var(--surface2);backdrop-filter:blur(22px);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);z-index:10}.themebox.open{display:flex;animation:pop .2s ease-out}@keyframes pop{from{opacity:0;transform:translateY(-6px) scale(.97)}to{opacity:1;transform:none}}
+.swatch{width:32px;height:32px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}.swatch[data-theme=prism]{background:linear-gradient(135deg,#596dff,#d34dff,#23cfc5)}.swatch[data-theme=ocean]{background:linear-gradient(135deg,#1677ff,#00c2d7,#65e5ff)}.swatch[data-theme=sunset]{background:linear-gradient(135deg,#ff6b6b,#c24cff,#ffad5a)}.swatch[data-theme=mint]{background:linear-gradient(135deg,#00a884,#00cec9,#74b9ff)}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:10px;font-weight:850;letter-spacing:1.6px;text-transform:uppercase;color:var(--a);background:color-mix(in srgb,var(--a) 9%,transparent);border:1px solid color-mix(in srgb,var(--a) 13%,transparent);padding:9px 12px;border-radius:30px}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--c);box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 16%,transparent);animation:blink 2s infinite}@keyframes blink{50%{box-shadow:0 0 0 7px color-mix(in srgb,var(--c) 4%,transparent)}}
+h1{font-size:clamp(34px,8vw,43px);line-height:1.04;letter-spacing:-1.8px;margin:17px 0 11px;font-weight:850}h1 span{background:linear-gradient(100deg,var(--a),var(--b) 55%,var(--c));color:transparent;background-clip:text;-webkit-background-clip:text;background-size:180% auto;animation:gradient 7s linear infinite}@keyframes gradient{to{background-position:180% center}}
+.sub{font-size:13px;line-height:1.65;color:var(--muted);margin:0 0 23px;max-width:390px}
+.panel{border:1px solid #ffffffc9;background:var(--surface);backdrop-filter:blur(24px);border-radius:27px;padding:17px;box-shadow:var(--shadow);position:relative;overflow:hidden;isolation:isolate}
+.panel:before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,var(--a),var(--b),var(--c),var(--a));background-size:200% 100%;animation:gradient 6s linear infinite}
+.panel:after{content:"";position:absolute;width:190px;height:190px;right:-125px;top:-120px;border-radius:50%;background:var(--glow);filter:blur(10px);z-index:-1}
+.label{font-size:10px;font-weight:850;letter-spacing:1.45px;margin:3px 0 10px;display:block;color:var(--muted)}
+.inputrow{display:flex;align-items:center;gap:8px;background:color-mix(in srgb,var(--bg) 70%,var(--surface2));border:1px solid var(--line);border-radius:17px;padding:7px 7px 7px 13px;transition:border .2s,box-shadow .2s}.inputrow:focus-within{border-color:color-mix(in srgb,var(--a) 55%,var(--line));box-shadow:0 0 0 4px color-mix(in srgb,var(--a) 10%,transparent)}
+.linkicon{font-size:19px;color:var(--a)}input{min-width:0;flex:1;border:0;outline:0;background:transparent;color:var(--text);font-size:13px;padding:10px 0}input::placeholder{color:var(--muted);opacity:.8}
+.paste{border:0;border-radius:12px;padding:10px 12px;font-size:11px;font-weight:850;color:white;background:linear-gradient(120deg,var(--a),var(--b));box-shadow:0 5px 13px var(--glow)}
+.quick{display:flex;gap:8px;margin-top:11px}.chip{flex:1;min-width:0;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--surface2) 45%,transparent);color:var(--muted);padding:10px 4px;font-size:10px;font-weight:750}.chip b{display:block;font-size:16px;margin-bottom:4px;color:var(--text)}
+.primary{width:100%;border:0;margin-top:14px;padding:15px;border-radius:16px;color:white;font-weight:850;font-size:13px;letter-spacing:.2px;background:linear-gradient(105deg,var(--a),var(--b) 63%,var(--c));background-size:180% 100%;box-shadow:0 9px 24px var(--glow);animation:gradient 8s linear infinite}.primary .arrow{float:right;font-size:18px;line-height:14px}
+.note{font-size:10px;line-height:1.55;color:var(--muted);margin:12px 3px 0}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;margin:26px 2px 12px}.sectionhead h2{font-size:16px;margin:0;letter-spacing:-.4px}.textbtn{border:0;background:transparent;color:var(--a);font-size:11px;font-weight:850;padding:8px 2px}
+.featuregrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.feature{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:0 8px 20px #38436f08;backdrop-filter:blur(15px);transition:transform .22s,border .22s}.feature:active{transform:translateY(-2px)}.ficon{width:38px;height:38px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,color-mix(in srgb,var(--a) 15%,var(--surface2)),color-mix(in srgb,var(--b) 14%,var(--surface2)));font-size:18px;margin-bottom:11px;box-shadow:inset 0 1px #ffffff8c}.feature strong{font-size:12px;display:block}.feature small{display:block;color:var(--muted);font-size:10px;line-height:1.5;margin-top:5px}
+.downloadcard{display:flex;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:11px;backdrop-filter:blur(15px);box-shadow:0 8px 20px #38436f08}.thumb{width:75px;height:73px;flex-shrink:0;border-radius:15px;background:linear-gradient(145deg,#ffc58c,#fd7194 45%,#6e6bff 75%,#40d6cf);display:grid;place-items:center;color:white;font-size:27px;position:relative;overflow:hidden}.thumb:before{content:"";position:absolute;width:90px;height:90px;border:1px solid #ffffff88;border-radius:50%;transform:translate(25px,-30px)}.dinfo{min-width:0;flex:1}.dinfo strong{font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dinfo small{color:var(--muted);font-size:10px;display:block;margin-top:5px}.bar{height:5px;border-radius:9px;background:color-mix(in srgb,var(--a) 12%,var(--surface2));margin-top:10px;overflow:hidden}.bar span{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,var(--a),var(--b),var(--c));transition:width .4s}.dlbtn{border:1px solid color-mix(in srgb,var(--a) 13%,transparent);border-radius:13px;width:38px;height:38px;background:color-mix(in srgb,var(--a) 10%,var(--surface2));color:var(--a);font-size:17px}
+.screen{display:none;animation:screenIn .25s ease-out}.screen.active{display:block}@keyframes screenIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.empty{padding:25px 14px;text-align:center;border:1px dashed var(--line);border-radius:20px;color:var(--muted);font-size:12px;line-height:1.6;background:color-mix(in srgb,var(--surface) 60%,transparent)}.empty .big{font-size:30px;margin-bottom:7px}
+.settingsrow{display:flex;align-items:center;justify-content:space-between;padding:14px 3px;border-bottom:1px solid var(--line);gap:12px}.settingsrow:last-child{border-bottom:0}.settingsrow strong{font-size:12px;display:block}.settingsrow small{font-size:10px;color:var(--muted);display:block;margin-top:4px}.toggle{width:43px;height:25px;border:0;border-radius:20px;background:color-mix(in srgb,var(--muted) 28%,transparent);padding:3px}.toggle:after{content:"";display:block;width:19px;height:19px;border-radius:50%;background:white;box-shadow:0 2px 5px #0002;transition:transform .2s}.toggle.on{background:var(--a)}.toggle.on:after{transform:translateX(18px)}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(560px,100%);padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:flex;justify-content:space-around;gap:5px;background:color-mix(in srgb,var(--surface2) 84%,transparent);backdrop-filter:blur(28px);border-top:1px solid var(--line);z-index:5;box-shadow:0 -8px 28px #28345c08}.navitem{border:0;background:transparent;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.05px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex:1;min-width:0;padding:7px 4px 6px;border-radius:17px;transition:color .2s,background .2s,transform .18s}.navitem .navicon{width:29px;height:29px;display:grid;place-items:center;border-radius:11px;transition:background .2s,transform .2s}.navitem svg{width:25px;height:25px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.navitem.active{color:var(--a);background:color-mix(in srgb,var(--a) 8%,transparent)}.navitem.active .navicon{background:color-mix(in srgb,var(--a) 13%,transparent);transform:translateY(-1px)}.navitem:active .navicon{transform:scale(.92)}
+.toast{position:fixed;bottom:90px;left:50%;transform:translate(-50%,15px);opacity:0;pointer-events:none;background:#1a2037;color:white;padding:12px 16px;border-radius:14px;font-size:11px;box-shadow:var(--shadow);transition:.25s;z-index:15;max-width:90%;text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}
+.result{display:none;margin-top:14px;border:1px solid var(--line);border-radius:18px;padding:13px;background:color-mix(in srgb,var(--surface2) 70%,transparent);animation:screenIn .25s}.result.show{display:block}.resulttop{display:flex;gap:11px;align-items:center}.resultthumb{width:54px;height:54px;border-radius:13px;background:linear-gradient(135deg,var(--a),var(--b),var(--c));display:grid;place-items:center;color:white;font-size:23px}.resulttop strong{display:block;font-size:12px;word-break:break-word}.resulttop small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.result .primary{margin-top:12px;padding:12px}
+@media(min-width:500px){.app{padding-top:28px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="top"><div class="brand"><div class="logo">✦</div><div><strong>PRISM FLOW</strong><small>VIDEO DOWNLOADER</small></div></div><button class="iconbtn" id="themeToggle" aria-label="Choose color theme">✧</button><div class="themebox" id="themebox"><button class="swatch" data-theme="prism" aria-label="Prism theme"></button><button class="swatch" data-theme="ocean" aria-label="Ocean theme"></button><button class="swatch" data-theme="sunset" aria-label="Sunset theme"></button><button class="swatch" data-theme="mint" aria-label="Mint theme"></button></div></header>
+<section class="screen active" id="page-Home">
+<div class="eyebrow"><i class="pulse"></i> YOUR MEDIA, YOUR FLOW</div>
+<h1>Anything you love.<br><span>One place to save.</span></h1>
+<p class="sub">সরাসরি ভিডিও/অডিও ফাইলের URL পেস্ট করে ফোনের Downloads ফোল্ডারে সেভ করুন।</p>
+<section class="panel">
+<label class="label" for="videoLink">VIDEO LINK</label>
+<div class="inputrow"><span class="linkicon">↗</span><input id="videoLink" type="url" placeholder="Paste video link here…" autocomplete="off" autocapitalize="off"><button class="paste" id="pasteBtn">PASTE</button></div>
+<div class="quick"><button class="chip" id="shareBtn"><b>⌯</b>Share to app</button><button class="chip" id="clipBtn"><b>▣</b>Clipboard</button><button class="chip" id="clearBtn"><b>×</b>Clear link</button></div>
+<button class="primary" id="analyzeBtn">Analyze link <span class="arrow">↗</span></button>
+<div class="result" id="result"><div class="resulttop"><div class="resultthumb">▶</div><div><strong id="resultTitle">Link ready</strong><small id="resultDesc">Link format looks valid</small></div></div><button class="primary" id="continueBtn">Continue to download options →</button></div>
+<p class="note">yt-dlp ইঞ্জিন দিয়ে সমর্থিত সাইটের ভিডিও লিংক প্রসেস ও ডাউনলোডের ব্যবস্থা যুক্ত। সাইটভেদে কাজের সফলতা আলাদা হতে পারে।</p>
+</section>
+<div class="sectionhead"><h2>Built for your flow</h2><button class="textbtn" id="themeText">Explore colors ↗</button></div>
+<section class="featuregrid">
+<article class="feature"><div class="ficon">⚡</div><strong>Smart downloads</strong><small>Keep supported download tasks organized.</small></article>
+<article class="feature"><div class="ficon">🌈</div><strong>Adaptive color</strong><small>Switch palettes to match your mood.</small></article>
+<article class="feature"><div class="ficon">🎬</div><strong>Quality options</strong><small>ডাইরেক্ট ফাইল URL সমর্থিত; পেজ এক্সট্রাকশন পরে যোগ হবে।</small></article>
+<article class="feature"><div class="ficon">🛡️</div><strong>Privacy first</strong><small>Your links stay under your control.</small></article>
+</section>
+<div class="sectionhead"><h2>Recent activity</h2><button class="textbtn" id="viewAll">View all ↗</button></div>
+<section class="downloadcard"><div class="thumb">▶</div><div class="dinfo"><strong id="recentTitle">Your next download</strong><small id="recentDesc">Paste a supported link to begin</small><div class="bar"><span id="recentBar"></span></div></div><button class="dlbtn" id="demoBtn" aria-label="Preview download">↓</button></section>
+<p class="note">Download only content you have permission to save. Some sites and protected streams may not be supported.</p>
+</section>
+<section class="screen" id="page-Downloads"><div class="eyebrow"><i class="pulse"></i> DOWNLOAD CENTER</div><h1>Your <span>downloads.</span></h1><p class="sub">Track your download tasks in one calm, organized space.</p><div class="empty"><div class="big">⇩</div><strong>No downloads yet</strong><br>এই অ্যাপ থেকে শুরু করা সরাসরি মিডিয়া ডাউনলোডের কাজ এখানে তালিকাভুক্ত হবে।</div></section>
+<section class="screen" id="page-Library"><div class="eyebrow"><i class="pulse"></i> YOUR COLLECTION</div><h1>Saved for <span>later.</span></h1><p class="sub">Your downloaded media, all in one place.</p><div class="empty"><div class="big">▤</div><strong>Your library is waiting</strong><br>ফোনের Downloads ফোল্ডারে সেভ করা ফাইল এখানে দেখা যাবে না; সেগুলো Files অ্যাপে পাবেন।</div></section>
+<section class="screen" id="page-Settings"><div class="eyebrow"><i class="pulse"></i> MAKE IT YOURS</div><h1>Personalize <span>your flow.</span></h1><p class="sub">A few thoughtful controls to shape your experience.</p><section class="panel"><div class="settingsrow"><div><strong>Color palette</strong><small>Change the app's accent colors</small></div><button class="textbtn" id="settingsTheme">Change ↗</button></div><div class="settingsrow"><div><strong>Motion effects</strong><small>Ambient gradients and smooth transitions</small></div><button class="toggle on" id="motionToggle" aria-label="Toggle motion effects"></button></div><div class="settingsrow"><div><strong>Clipboard privacy</strong><small>Only read clipboard when you tap Paste</small></div><span style="color:var(--c);font-weight:900">ON</span></div><div class="settingsrow"><div><strong>Build status</strong><small>yt-dlp multi-site engine · v0.3</small></div><span style="font-size:10px;color:var(--a);font-weight:850">V0.2</span></div></section></section>
+</main>
+<nav class="bottom" aria-label="Main navigation">
+<button class="navitem active" data-page="Home" aria-label="Home"><span class="navicon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3.5 10.5 8.5-7 8.5 7"/><path d="M5.5 9.5v10h13v-10"/><path d="M9.5 19.5v-6h5v6"/></svg></span><span>Home</span></button>
+<button class="navitem" data-page="Downloads" aria-label="Downloads"><span class="navicon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v11"/><path d="m7.5 10 4.5 4.5 4.5-4.5"/><path d="M4.5 17v3h15v-3"/></svg></span><span>Downloads</span></button>
+<button class="navitem" data-page="Library" aria-label="Library"><span class="navicon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h14a1.5 1.5 0 0 1 1.5 1.5v13a1 1 0 0 1-1 1h-14A2.5 2.5 0 0 1 3 17.5v-10A3 3 0 0 1 6 4.5Z"/><path d="M7 4.5v15.5"/><path d="M10 8h7M10 11.5h7M10 15h5"/></svg></span><span>Library</span></button>
+<button class="navitem" data-page="Settings" aria-label="Settings"><span class="navicon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19.1 13.8 1.1 1.8-2 3.4-2.1-.4a7.9 7.9 0 0 1-1.8 1l-.9 1.9h-3.9l-.9-1.9a7.9 7.9 0 0 1-1.8-1l-2.1.4-2-3.4 1.1-1.8a7.6 7.6 0 0 1 0-2.1l-1.1-1.8 2-3.4 2.1.4a7.9 7.9 0 0 1 1.8-1l.9-1.9h3.9l.9 1.9a7.9 7.9 0 0 1 1.8 1l2.1-.4 2 3.4-1.1 1.8a7.6 7.6 0 0 1 0 2.1Z" transform="translate(0 -1) scale(1 .98)"/></svg></span><span>Settings</span></button>
+</nav><div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+const $=id=>document.getElementById(id);let toastTimer;
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600)}
+const palettes={prism:['#596dff','#d34dff','#23cfc5','#f5f6ff','#182039','#75809b','rgba(89,109,255,.2)'],ocean:['#1677ff','#00c2d7','#65e5ff','#f2f9ff','#142c45','#6f879c','rgba(22,119,255,.2)'],sunset:['#ff6b6b','#c24cff','#ffad5a','#fff7f3','#38213c','#8b758a','rgba(255,107,107,.2)'],mint:['#00a884','#00cec9','#74b9ff','#f1fffb','#153c38','#6e938c','rgba(0,168,132,.2)']};
+function setTheme(name,quiet=false){const p=palettes[name]||palettes.prism;['--a','--b','--c','--bg','--text','--muted','--glow'].forEach((v,i)=>document.documentElement.style.setProperty(v,p[i]));try{localStorage.setItem('prism-theme',name)}catch(e){}$('themebox').classList.remove('open');if(!quiet)toast(name[0].toUpperCase()+name.slice(1)+' palette applied')}
+$('themeToggle').onclick=$('themeText').onclick=$('settingsTheme').onclick=()=> $('themebox').classList.toggle('open');
+document.querySelectorAll('.swatch').forEach(b=>b.onclick=()=>setTheme(b.dataset.theme));
+try{setTheme(localStorage.getItem('prism-theme')||'prism',true)}catch(e){setTheme('prism',true)}
+async function pasteLink(){try{if(navigator.clipboard&&navigator.clipboard.readText){const s=await navigator.clipboard.readText();if(s){$('videoLink').value=s;toast('Link pasted — ready to check')}else toast('Clipboard is empty')}else toast('Tap the box, then long-press and choose Paste')}catch(e){toast('For privacy, paste manually into the link box')}}
+$('pasteBtn').onclick=$('clipBtn').onclick=pasteLink;
+$('clearBtn').onclick=()=>{$('videoLink').value='';$('result').classList.remove('show');toast('Link cleared')};
+$('analyzeBtn').onclick=()=>{const v=$('videoLink').value.trim();if(!v){toast('Paste a video link first');$('videoLink').focus();return}try{const u=new URL(v);if(!['http:','https:'].includes(u.protocol))throw Error();$('resultTitle').textContent=u.hostname.replace(/^www\./,'');$('resultDesc').textContent='URL ঠিক আছে। Continue চাপলে ভিডিও এক্সট্র্যাকশন ও ডাউনলোড শুরু হবে।';$('result').classList.add('show');$('recentTitle').textContent='Link checked';$('recentDesc').textContent=u.hostname+' · yt-dlp engine';toast('লিংক পরীক্ষা হয়েছে। Continue চাপলে ভিডিও প্রসেস হবে।')}catch(e){$('result').classList.remove('show');toast('Please enter a valid http or https link')}};
+$('continueBtn').onclick=()=>{
+ const raw=$('videoLink').value.trim();
+ try{
+  const u=new URL(raw); if(!['http:','https:'].includes(u.protocol)||!u.hostname)throw Error();
+  if(window.AndroidDownload && typeof window.AndroidDownload.downloadMedia==='function'){
+   const choice=prompt('ভিডিও কোয়ালিটি লিখুন: 360, 480, 720, 1080 অথবা best','720');
+   if(choice===null)return;
+   const q=choice.trim().toLowerCase();
+   if(!['360','480','720','1080','1440','2160','best'].includes(q)){toast('360, 480, 720, 1080, 1440, 2160 অথবা best বেছে নাও');return;}
+   const audio=confirm('শুধু MP3 অডিও ডাউনলোড করতে চাইলে OK চাপুন। ভিডিও চাইলে Cancel চাপুন।');
+   addHistory(u.hostname,raw,'Queued · '+(audio?'MP3':q+'p'));
+   $('resultDesc').textContent='yt-dlp ইঞ্জিন দিয়ে লিংক প্রসেস হচ্ছে…';
+   window.AndroidDownload.downloadMedia(raw,q,audio);
+  } else {toast('ভিডিও এক্সট্র্যাকশন ইঞ্জিন Android APK-তে চালু করতে হবে।')}
+ }catch(e){toast('সঠিক http/https লিংক দিন।')}
+};
+window.PrismEngine={
+ onReady:(ok,msg)=>{const e=$('recentDesc');if(e)e.textContent=msg;toast(msg)},
+ onStart:(url)=>{ $('resultTitle').textContent='ভিডিও প্রসেস হচ্ছে';$('resultDesc').textContent='ভিডিও তথ্য শনাক্ত করে ডাউনলোড শুরু হচ্ছে…';toast('ভিডিও এক্সট্র্যাকশন শুরু হয়েছে')},
+ onProgress:(p,eta)=>{$('resultTitle').textContent='ডাউনলোড চলছে · '+p+'%';$('resultDesc').textContent='আনুমানিক বাকি সময়: '+eta+' সেকেন্ড';},
+ onComplete:(msg)=>{ $('resultTitle').textContent='ডাউনলোড সম্পন্ন';$('resultDesc').textContent=msg;addHistory('Video download', '', 'Completed');toast(msg)},
+ onError:(msg)=>{ $('resultTitle').textContent='ডাউনলোড হয়নি';$('resultDesc').textContent=msg;toast(msg)}
+};
+$('shareBtn').onclick=()=>toast('Share-to-app works after packaging as an Android app');
+$('viewAll').onclick=()=>{renderHistory();goPage('Downloads')};
+$('demoBtn').onclick=()=>{goPage('Home');$('videoLink').focus();toast('সরাসরি মিডিয়া ফাইলের URL পেস্ট করুন')};
+function getHistory(){try{return JSON.parse(localStorage.getItem('prism-download-history')||'[]')}catch(e){return[]}}
+function addHistory(name,url,status){let h=getHistory();h.unshift({name,url,status,time:new Date().toLocaleString()});h=h.slice(0,50);try{localStorage.setItem('prism-download-history',JSON.stringify(h))}catch(e){}renderHistory()}
+function renderHistory(){
+ const page=$('page-Downloads');const old=page.querySelector('.history-list');if(old)old.remove();
+ const h=getHistory();const box=document.createElement('div');box.className='history-list';
+ if(!h.length){const e=page.querySelector('.empty');if(e)e.style.display='block';return}
+ const e=page.querySelector('.empty');if(e)e.style.display='none';
+ h.forEach(item=>{const row=document.createElement('section');row.className='downloadcard';row.style.marginTop='10px';const thumb=document.createElement('div');thumb.className='thumb';thumb.textContent='↓';const info=document.createElement('div');info.className='dinfo';const strong=document.createElement('strong');strong.textContent=item.name;const small=document.createElement('small');small.textContent=item.status+' · '+item.time;info.append(strong,small);row.append(thumb,info);box.append(row)});
+ page.append(box)
+}
+renderHistory();
+function goPage(name){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id==='page-'+name));document.querySelectorAll('.navitem').forEach(b=>b.classList.toggle('active',b.dataset.page===name));window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('.navitem').forEach(b=>b.onclick=()=>goPage(b.dataset.page));
+$('motionToggle').onclick=()=>{const b=$('motionToggle');b.classList.toggle('on');document.body.classList.toggle('reduce-motion',!b.classList.contains('on'));if(!b.classList.contains('on')){document.body.style.setProperty('--motion-off','1');document.querySelectorAll('*').forEach(el=>el.style.animationPlayState='paused')}else{document.querySelectorAll('*').forEach(el=>el.style.animationPlayState='running')}toast('Motion effects '+(b.classList.contains('on')?'enabled':'paused'))};
+</script>
+
+<script>
+/* PRISM FLOW Android bridge: routes supported video page URLs to the native yt-dlp engine. */
+window.PrismNative = {
+  downloadDirect: function(url, filename) {
+    if (window.AndroidDownload && typeof window.AndroidDownload.downloadMedia === 'function') {
+      window.AndroidDownload.downloadMedia(String(url || ''), '720', false);
+      return true;
+    }
+    return false;
+  }
+};
+</script>
+
+</body></html>

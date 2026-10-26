@@ -1,0 +1,16 @@
+ফোন থেকেই APK বানানোর নির্দেশনা (কম্পিউটার লাগবে না)
+
+১) GitHub অ্যাকাউন্টে লগইন করুন।
+২) github.com/new খুলে নতুন repository তৈরি করুন; নাম দিন PRISM-FLOW, Public বা Private যেকোনোটি।
+৩) এই ZIP ফাইলটি ফোনে Extract করুন। ZIP-এর ভেতরের PRISM_FLOW_Android_Project ফোল্ডারের ভেতরের সব ফাইল GitHub repository-র root-এ আপলোড করুন। .github ফোল্ডারটিও অবশ্যই আপলোড করবেন।
+৪) আপলোড শেষে repository-র Actions ট্যাব খুলুন। “Build PRISM FLOW APK” workflow বেছে নিন।
+৫) “Run workflow” চাপুন। Build চলা শেষ হওয়া পর্যন্ত অপেক্ষা করুন। প্রথম build-এ কয়েক মিনিট লাগতে পারে।
+৬) সবুজ ✔️ হলে build run-টি খুলে নিচে Artifacts থেকে PRISM-FLOW-debug-APK ডাউনলোড করুন। ZIP-টি Extract করলে app-debug.apk পাবেন।
+৭) APK ফোনে খুলে Android-এর “Install unknown apps” অনুমতি দিলে ইনস্টল করতে পারবেন। শুধুমাত্র নিজের তৈরি/বিশ্বস্ত APK ইনস্টল করুন।
+
+যদি Build fail হয়:
+• Actions-এর লাল ব্যর্থ run খুলে শেষের error log দেখুন।
+• error log কপি করে ChatGPT-তে পাঠান; সেটা দেখে build error ঠিক করতে হবে।
+• Build সফল হওয়া মানে অ্যাপের প্রতিটি সাইটে ভিডিও ডাউনলোড নিশ্চিত নয়; ইনস্টল করে বাস্তব পরীক্ষা দরকার।
+
+সতর্কতা: GitHub-এ আপলোড করা সোর্সের visibility ঠিক করে নিন। API key, password বা ব্যক্তিগত ফাইল কখনো repository-তে দেবেন না।
